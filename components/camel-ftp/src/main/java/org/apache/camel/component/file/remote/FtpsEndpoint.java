@@ -86,7 +86,7 @@ public class FtpsEndpoint extends FtpEndpoint<FTPFile> {
     }
 
     @Override
-    protected FTPClient createFtpClient() throws Exception {
+    protected FTPClient createFtpClient(FTPConnectionPool pool) throws Exception {
         FTPSClient client;
 
         if (sslContextParameters != null) {
@@ -112,6 +112,7 @@ public class FtpsEndpoint extends FtpEndpoint<FTPFile> {
             client.setNeedClientAuth(socket.getNeedClientAuth());
             client.setWantClientAuth(socket.getWantClientAuth());
             client.setEnabledSessionCreation(socket.getEnableSessionCreation());
+
         } else {
             client = new FTPSClient(getFtpsConfiguration().getSecurityProtocol(), getFtpsConfiguration().isImplicit());
 
@@ -172,7 +173,7 @@ public class FtpsEndpoint extends FtpEndpoint<FTPFile> {
         if (client == null) {
             // must use a new client if not explicit configured to use a custom
             // client
-            client = (FTPSClient) createFtpClient();
+            client = (FTPSClient) createFtpClient(pool);
         }
 
         // use configured buffer size which is larger and therefore faster (as

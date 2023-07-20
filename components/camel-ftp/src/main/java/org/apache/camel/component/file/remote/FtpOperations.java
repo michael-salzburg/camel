@@ -256,6 +256,7 @@ public class FtpOperations implements RemoteFileOperations<FTPFile> {
             clientActivityListener.onConnecting(host);
             client.connect(host, port);
 
+
             // must check reply code if we are connected
             int reply = client.getReplyCode();
 

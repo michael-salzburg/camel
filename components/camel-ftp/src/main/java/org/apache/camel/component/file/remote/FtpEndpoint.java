@@ -81,6 +81,8 @@ public class FtpEndpoint<T extends FTPFile> extends RemoteFileEndpoint<FTPFile> 
     @UriParam(label = "consumer")
     protected boolean resumeDownload;
 
+    protected FTPConnectionPool pool;
+
     public FtpEndpoint() {
     }
 
@@ -150,7 +152,7 @@ public class FtpEndpoint<T extends FTPFile> extends RemoteFileEndpoint<FTPFile> 
         if (client == null) {
             // must use a new client if not explicit configured to use a custom
             // client
-            client = createFtpClient();
+            client = createFtpClient(pool);
         }
 
         // use configured buffer size which is larger and therefore faster (as
@@ -227,7 +229,8 @@ public class FtpEndpoint<T extends FTPFile> extends RemoteFileEndpoint<FTPFile> 
      *
      * @throws Exception may throw client-specific exceptions if the client cannot be created
      */
-    protected FTPClient createFtpClient() throws Exception {
+    protected FTPClient createFtpClient(FTPConnectionPool pool) throws Exception {
+
         FTPClient client = new FTPClient();
         // use parser factory that can load classes via Camel to work in all runtimes
         ClassResolver cr = getCamelContext().getClassResolver();
